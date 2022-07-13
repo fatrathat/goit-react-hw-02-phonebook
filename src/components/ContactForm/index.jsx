@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { nanoid } from 'nanoid';
+import styles from './style.module.css';
+import PropTypes from 'prop-types';
 
 class ContactFrom extends Component {
   INITIAL_STATE = {
@@ -14,53 +16,66 @@ class ContactFrom extends Component {
     });
   };
 
+  reset = () => {
+    this.setState({
+      name: '',
+      number: '',
+    });
+  };
+
   submitHandler = e => {
     e.preventDefault();
     this.props.onAddContacs({ ...this.state, id: nanoid() });
     this.reset();
   };
 
-  reset = () => {
-    this.setState({ ...this.INITIAL_STATE });
-  };
-
   render() {
     return (
-      <div>
+      <div className={styles.ContactForm}>
         <form onSubmit={this.submitHandler}>
-          <div className="ContactForm__controls">
+          <div className={styles.ContactForm__controls}>
+            <label>
+              Name
+              <input
+                className={styles.ContactForm__input}
+                onChange={this.changeHandler}
+                type="text"
+                name="name"
+                pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+                title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+                required
+              />
+            </label>
             <div className="ContactForm__control">
               <label>
-                Name
+                Number
                 <input
+                  className={styles.ContactForm__input}
                   onChange={this.changeHandler}
-                  type="text"
-                  name="name"
-                  pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-                  title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+                  type="tel"
+                  name="number"
+                  pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+                  title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
                   required
                 />
               </label>
-              <div className="ContactForm__control">
-                <label>
-                  Number
-                  <input
-                    onChange={this.changeHandler}
-                    type="tel"
-                    name="number"
-                    pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-                    title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-                    required
-                  />
-                </label>
-              </div>
-              <button type="submit">Add contact</button>
             </div>
+            <button type="submit">Add contact</button>
           </div>
         </form>
       </div>
     );
   }
 }
+
+ContactFrom.propTypes = {
+  states: PropTypes.shape({
+    contacts: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired,
+      })
+    ),
+  }),
+};
 
 export default ContactFrom;
