@@ -4,7 +4,7 @@ import styles from './style.module.css';
 import PropTypes from 'prop-types';
 
 class ContactFrom extends Component {
-  INITIAL_STATE = {
+  state = {
     name: '',
     number: '',
   };
@@ -16,17 +16,10 @@ class ContactFrom extends Component {
     });
   };
 
-  reset = () => {
-    this.setState({
-      name: '',
-      number: '',
-    });
-  };
-
   submitHandler = e => {
     e.preventDefault();
     this.props.onAddContacs({ ...this.state, id: nanoid() });
-    this.reset();
+    e.target.reset();
   };
 
   render() {
